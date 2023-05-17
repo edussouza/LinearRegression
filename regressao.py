@@ -1,5 +1,5 @@
 import statistics
-import numpy
+import numpy as np
 
 c = True
 
@@ -23,23 +23,27 @@ print(x)
 print(y)
 
 for i in range(len(x)):
-    uxy += x[i] * y[i]
-    sux += x[i]
-    suy += y[i]
+    uxy += x[i] * y[i]          #soma produto X e Y                 
+    sux += x[i]                 #soma valores X
+    suy += y[i]                 #soma valores Y
 
-uxy = uxy/len(x)
-sux = sux/len(x)
-suy = suy/len(x)
-uxuy = sux*suy
-cov = uxy - uxuy
+duxy = uxy/len(x)                #media do produto das duas variaveis
+dsux = sux/len(x)               #media das variaveis de X
+dsuy = suy/len(x)               #media das variaveis de Y
+uxuy = dsux*dsuy                #produto das medias das duas variaveis 
+cov = duxy - uxuy                #covariancia 
 
 print(sux)
 print(suy)
+print(duxy)
+print(uxy)
+print(dsux)
+print(dsuy)
 print(uxuy)
 print(cov)
 
 r = statistics.correlation(x, y)
-rquad = r^2
+rquad = pow(r, 2)
 
 decimais = int(input("Insira numero de casas decimais: "))
 
@@ -48,8 +52,20 @@ print(round(r, decimais))
 xp = []
 yp = []
 
-for i in range(len(x)):
-    xp = []
+sisop1 = [[suy, len(x), sux], [uxy, sux, pow(sux, 2)]]
+A = np.array(sisop1)
+
+B = np.zeros(2)
+X = np.linalg.lstsq(A, B, rcond=None)
+
+solution = X[0]
+residual = X[1]
+
+print(solution)
+
+
+
+
 
 
        
