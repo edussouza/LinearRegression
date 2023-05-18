@@ -1,5 +1,6 @@
 import statistics
 import numpy as np
+from sympy import symbols, Eq, solve
 
 c = True
 
@@ -52,7 +53,7 @@ print(round(r, decimais))
 xp = []
 yp = []
 
-sisop1 = [[suy, len(x), sux], [uxy, sux, pow(sux, 2)]]
+sisop1 = [[suy, len(x)*'a', sux*'b'], [uxy, sux*'a', pow(sux, 2)*'b']]
 A = np.array(sisop1)
 
 B = np.zeros(2)
