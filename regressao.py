@@ -1,6 +1,9 @@
 import statistics
 import numpy as np
-from sympy import symbols, Eq, solve
+from sympy import Eq
+import matplotlib
+matplotlib.use('TkAgg')
+import matplotlib.pyplot as plt
 
 c = True
 
@@ -15,58 +18,60 @@ y = [8, 7, 7, 10, 5, 8, 10, 6, 8, 6]
 #     if controle == "S":
 #         c = False
 
-uxy = 0
-sux = 0
-suy = 0
-i = 0
-
 print(x)
 print(y)
 
+soma_uxy = 0
+soma_ux = 0
+soma_uy = 0
+
+i = 0
+
 for i in range(len(x)):
-    uxy += x[i] * y[i]          #soma produto X e Y                 
-    sux += x[i]                 #soma valores X
-    suy += y[i]                 #soma valores Y
+    soma_uxy += x[i] * y[i]         #soma produto X e Y                 
+    
+soma_ux = sum(x)                    #soma valores X
+soma_uy = sum(y)                    #soma valores Y
 
-duxy = uxy/len(x)                #media do produto das duas variaveis
-dsux = sux/len(x)               #media das variaveis de X
-dsuy = suy/len(x)               #media das variaveis de Y
-uxuy = dsux*dsuy                #produto das medias das duas variaveis 
-cov = duxy - uxuy                #covariancia 
+uxy = soma_uxy/len(x)               #media do produto das duas variaveis
+ux = soma_ux/len(x)                 #media das variaveis de X
+uy = soma_uy/len(x)                 #media das variaveis de Y
+uxuy = ux*uy                        #produto das medias das duas variaveis 
+cov = uxy - uxuy                    #covariancia 
+xquad = pow(soma_ux, 2)             #soma X elevado ao quadrado
+npares = len(x)                     #numero de pares 
 
-print(sux)
-print(suy)
-print(duxy)
-print(uxy)
-print(dsux)
-print(dsuy)
-print(uxuy)
-print(cov)
-
-r = statistics.correlation(x, y)
-rquad = pow(r, 2)
+r = statistics.correlation(x, y)    #correlação de pearson 
+rquad = pow(r, 2)                   #correlação de pearson^2
 
 decimais = int(input("Insira numero de casas decimais: "))
 
-print(round(r, decimais))
+print("Soma X:", soma_ux)
+print("Soma Y:", soma_uy)
+print("Soma XY:", soma_uxy)
+print("Soma X^2:", xquad)
+print("N (numero de pares):", npares)
+print("Coeficiente de correlação de Pearson:", round(r, decimais))
+print("Coeficiente de determinação de Pearson:", round(rquad, decimais))
+print("-----------------------")
+print("Media X:",ux)
+print("Media Y:", uy)
+print("Media XY:", uxuy)
+print("Covariancia:", cov)
+print("-----------------------")
 
-xp = []
-yp = []
+xp = np.array(x)
+yp = np.array(y)
 
-sisop1 = [[suy, len(x)*'a', sux*'b'], [uxy, sux*'a', pow(sux, 2)*'b']]
-A = np.array(sisop1)
+A = np.vstack([xp, np.ones(len(x))]).T
+a, b = np.linalg.lstsq(A, yp, rcond=None)[0]
 
-B = np.zeros(2)
-X = np.linalg.lstsq(A, B, rcond=None)
+print("A:", round(a, decimais))
+print("B:", round(b, decimais))
 
-solution = X[0]
-residual = X[1]
+print("Equacao da reta: y = {0}x + {1}".format(round(a, decimais), round(b, decimais)))
 
-print(solution)
-
-
-
-
-
-
-       
+_ = plt.plot(xp, yp, 'o', label = "Dados Originarios", markersize = 10)
+_ = plt.plot(x, a*xp + b, 'r', label = "Reta de Regressão")
+_ = plt.legend()
+plt.show()
