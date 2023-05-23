@@ -7,19 +7,21 @@ import matplotlib.pyplot as plt
 
 c = True
 
-x = [6, 5, 8, 8, 7, 6, 10, 4, 9, 7]
-y = [8, 7, 7, 10, 5, 8, 10, 6, 8, 6]
+n = int(input("Quantos pares de dados serão usados? "))
 
-# while c:
-#     x.append(float(input("Insira X: ")))
-#     y.append(float(input("Insira Y: ")))
-#     controle = (input("Desja sair? (S/N)".upper()))
-    
-#     if controle == "S":
-#         c = False
+x = []
+y = []
+c = 0
+
+while c!=n:
+    x.append(float(input("Insira X: ")))
+    y.append(float(input("Insira Y: ")))
+    c = c + 1
 
 print(x)
 print(y)
+
+decimais = int(input("Insira numero de casas decimais: "))
 
 soma_uxy = 0
 soma_ux = 0
@@ -28,23 +30,24 @@ soma_uy = 0
 i = 0
 
 for i in range(len(x)):
-    soma_uxy += x[i] * y[i]         #soma produto X e Y                 
+    soma_uxy += x[i] * y[i]                         #soma produto X e Y                 
     
-soma_ux = sum(x)                    #soma valores X
-soma_uy = sum(y)                    #soma valores Y
+soma_ux = round(sum(x), decimais)                   #soma valores X
+soma_uy = round(sum(y), decimais)                   #soma valores Y
 
-uxy = soma_uxy/len(x)               #media do produto das duas variaveis
-ux = soma_ux/len(x)                 #media das variaveis de X
-uy = soma_uy/len(x)                 #media das variaveis de Y
-uxuy = ux*uy                        #produto das medias das duas variaveis 
-cov = uxy - uxuy                    #covariancia 
-xquad = pow(soma_ux, 2)             #soma X elevado ao quadrado
-npares = len(x)                     #numero de pares 
+uxy = round(soma_uxy/len(x), decimais)              #media do produto das duas variaveis
+ux = round(soma_ux/len(x),decimais)                 #media das variaveis de X
+uy = round(soma_uy/len(x), decimais)                #media das variaveis de Y
+uxuy = ux*uy                                        #produto das medias das duas variaveis 
+cov = uxy - uxuy                                    #covariancia 
+xquad = pow(soma_ux, 2)                             #soma X elevado ao quadrado
+npares = len(x)                                     #numero de pares 
 
-r = statistics.correlation(x, y)    #correlação de pearson 
-rquad = pow(r, 2)                   #correlação de pearson^2
+r = round(statistics.correlation(x, y), decimais)    #correlação de pearson 
+rquad = pow(r, 2)                                    #correlação de pearson^2
 
-decimais = int(input("Insira numero de casas decimais: "))
+xp = np.array(x)
+yp = np.array(y)                    
 
 print("Soma X:", soma_ux)
 print("Soma Y:", soma_uy)
@@ -59,9 +62,6 @@ print("Media Y:", uy)
 print("Media XY:", uxuy)
 print("Covariancia:", cov)
 print("-----------------------")
-
-xp = np.array(x)
-yp = np.array(y)
 
 A = np.vstack([xp, np.ones(len(x))]).T
 a, b = np.linalg.lstsq(A, yp, rcond=None)[0]
